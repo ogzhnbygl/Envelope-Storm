@@ -198,7 +198,10 @@ envelopeList.addEventListener('click', (e) => {
   if (typeBtn) {
     const i = +typeBtn.dataset.i;
     envelopes[i].type = typeBtn.dataset.type;
-    if (typeBtn.dataset.type === 'tornado') envelopes[i].imageId = null;
+    if (typeBtn.dataset.type === 'tornado') {
+      envelopes[i].imageId = null;
+      envelopes[i].points = 0;
+    }
     renderEnvelopes();
     return;
   }

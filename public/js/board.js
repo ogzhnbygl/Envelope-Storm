@@ -8,10 +8,11 @@ let lastSeq = null;
 
 function onState(s) {
   const prev = state;
+  const isChanged = !prev || prev.actionSeq !== s.actionSeq;
   state = s;
   if (lastSeq !== null && s.actionSeq > lastSeq && s.lastAction) handleAction(s.lastAction);
   lastSeq = s.actionSeq;
-  render();
+  if (isChanged) render();
   if (s.finished && (!prev || !prev.finished)) showWinner();
 }
 
