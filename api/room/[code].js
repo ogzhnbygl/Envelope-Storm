@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       else if (action === 'next-team') event = nextTeam(room).action;
       else if (action === 'finish') event = finish(room).action;
       else if (action === 'start') { room.started = true; event = { type: 'start' }; }
-      else if (action === 'reset') { room = buildRoom(game); room.started = true; event = { type: 'reset' }; }
+      else if (action === 'reset') { room = buildRoom(game); event = { type: 'reset' }; }
       else return res.status(400).json({ error: 'unknown_action' });
 
       // Hiçbir değişiklik olmadıysa (örn. zaten açık zarf, zarf açılmadan karar) sessizce dön

@@ -33,6 +33,15 @@ function handleAction(a) {
 function render() {
   document.getElementById('game-name').textContent = state.name;
   document.getElementById('code').textContent = state.code;
+  
+  if (!state.started) {
+    document.getElementById('start-screen').style.display = 'block';
+    document.getElementById('mod-content').style.display = 'none';
+  } else {
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('mod-content').style.display = 'block';
+  }
+
   scoreboardEl.innerHTML = state.teams.map((t, i) => `
     <div class="team-card ${i === state.currentTeam ? 'active' : ''} ${i === 0 ? 'team-a' : 'team-b'}">
       <div class="team-name">${escapeHtml(t.name)}</div>
@@ -101,5 +110,6 @@ function onNotFound() {
 
 pollRoom(code, onState, onNotFound);
 
-// Moderatör bağlandığında oyunu başlat
-roomAction(code, { action: 'start' }).catch(() => {});
+document.getElementById('btn-start-game').addEventListener('click', () => {
+  roomAction(code, { action: 'start' }).catch(() => {});
+});

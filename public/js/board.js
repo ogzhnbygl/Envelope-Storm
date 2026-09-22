@@ -117,7 +117,8 @@ function renderGrid() {
     } else if (e.type === 'tornado') {
       inner = `<div class="env revealed tornado-env"><div class="tornado-emoji">🌪️</div><div class="env-caption">TORNADO</div></div>`;
     } else {
-      inner = `<div class="env revealed image-env">${e.imageId ? `<img src="/api/images/${e.imageId}" alt="görsel">` : '<div class="env-noimg">?</div>'}</div>`;
+      const isFocused = (i === state.lastOpened) ? 'focused' : '';
+      inner = `<div class="env revealed image-env ${isFocused}">${e.imageId ? `<img src="/api/images/${e.imageId}" alt="görsel">` : '<div class="env-noimg">?</div>'}</div>`;
     }
     return `<div class="envelope-wrapper">${inner}</div>`;
   }).join('');

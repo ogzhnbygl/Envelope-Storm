@@ -14,22 +14,29 @@
   </header>
 
   <main class="mod-wrap">
-    <div class="mod-scoreboard" id="scoreboard"></div>
-
-    <div class="open-hint" id="open-hint">Sıradaki öğrenci bir zarf seçsin…</div>
-
-    <div class="judge-row">
-      <button class="btn btn-ok" id="judge-correct">✓ Doğru</button>
-      <button class="btn btn-danger" id="judge-incorrect">✗ Yanlış</button>
+    <div id="start-screen" style="display:none; text-align:center; padding-top:60px;">
+      <h2 style="color:var(--text); margin-bottom:20px;">Sınıf Hazır Olduğunda...</h2>
+      <button id="btn-start-game" class="btn btn-board" style="font-size:24px; padding:20px 40px; border-radius:100px;">▶ Oyunu Başlat</button>
     </div>
 
-    <div class="ctrl-row">
-      <button class="btn" id="next-team">Sıradaki grup →</button>
-      <button class="btn" id="reset">🔄 Oyunu sıfırla</button>
-      <button class="btn btn-board" id="finish">🏁 Oyunu bitir</button>
-    </div>
+    <div id="mod-content" style="display:none;">
+      <div class="mod-scoreboard" id="scoreboard"></div>
 
-    <div class="log" id="log"></div>
+      <div class="open-hint" id="open-hint">Sıradaki öğrenci bir zarf seçsin…</div>
+
+      <div class="judge-row">
+        <button class="btn btn-ok" id="judge-correct">✓ Doğru</button>
+        <button class="btn btn-danger" id="judge-incorrect">✗ Yanlış</button>
+      </div>
+
+      <div class="ctrl-row">
+        <button class="btn" id="next-team">Sıradaki grup →</button>
+        <button class="btn" id="reset">🔄 Oyunu sıfırla</button>
+        <button class="btn btn-board" id="finish">🏁 Oyunu bitir</button>
+      </div>
+
+      <div class="log" id="log"></div>
+    </div>
   </main>
 
   <div class="overlay" id="banner" hidden>
