@@ -1,20 +1,24 @@
 import { getDb } from '../../lib/db.js';
+import { getSessionUser } from '../../lib/auth.js';
 import { clampInt, normalizeTeams, sanitizeEnvelopes, resizeEnvelopes } from '../../lib/game.js';
 
 export default async function handler(req, res) {
   try {
+    const user = await getSessionUser(req);
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+
     const db = await getDb();
     const games = db.collection('games');
     const id = String(req.query.id || '');
 
     if (req.method === 'GET') {
-      const g = await games.findOne({ id });
+      const g = await games.findOne({ id, userId: user.id });
       if (!g) return res.status(404).json({ error: 'not_found' });
       return res.status(200).json(g);
     }
 
     if (req.method === 'PUT') {
-      const g = await games.findOne({ id });
+      const g = await games.findOne({ id, userId: user.id });
       if (!g) return res.status(404).json({ error: 'not_found' });
       const { name, teams, envelopes, envelopeCount } = req.body || {};
       if (name !== undefined) g.name = String(name).slice(0, 100);
@@ -30,7 +34,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'DELETE') {
-      const g = await games.findOne({ id });
+      const g = await games.findOne({ id, userId: user.id });
       if (!g) return res.status(404).json({ error: 'not_found' });
       await games.deleteOne({ id });
       await db.collection('rooms').deleteOne({ _id: g.code });

@@ -31,7 +31,10 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'DELETE') {
-      await images.deleteOne({ id });
+      const { getSessionUser } = await import('../../lib/auth.js');
+      const user = await getSessionUser(req);
+      if (!user) return res.status(401).json({ error: 'Unauthorized' });
+      await images.deleteOne({ id, userId: user.id });
       return res.status(200).json({ ok: true });
     }
 

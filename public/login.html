@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envelope Storm — Giriş Yap</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body style="display:flex; justify-content:center; align-items:center; min-height:100vh;">
+  <main class="wrap" style="max-width:400px; padding:20px;">
+    <div class="panel" style="text-align:center;">
+      <h1 style="color:var(--accent); margin-bottom:8px;">Öğretmen Girişi</h1>
+      <p class="muted" style="margin-bottom:24px;">Oyunlarınızı yönetmek için giriş yapın.</p>
+
+      <form id="login-form" style="display:flex; flex-direction:column; gap:16px;">
+        <input type="email" id="email" placeholder="E-posta adresiniz" required
+               style="width:100%; padding:16px; border:2px solid var(--line); border-radius:12px; font-size:16px; outline:none; background:var(--bg2);">
+        <input type="password" id="password" placeholder="Şifreniz" required
+               style="width:100%; padding:16px; border:2px solid var(--line); border-radius:12px; font-size:16px; outline:none; background:var(--bg2);">
+        <div id="auth-error" style="color:var(--danger); font-size:14px; min-height:20px;"></div>
+        <button type="submit" class="btn btn-primary" style="padding:16px; font-size:18px;">Giriş Yap</button>
+      </form>
+      
+      <p style="margin-top:24px; font-size:14px; color:var(--muted);">
+        Hesabınız yok mu? <a href="#" id="toggle-register" style="color:var(--accent); font-weight:bold;">Kayıt Olun</a>
+      </p>
+      
+      <p class="hint" style="margin-top:16px;"><a href="/">← Ana sayfaya dön</a></p>
+    </div>
+  </main>
+  
+  <script src="/js/common.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

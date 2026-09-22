@@ -1,15 +1,19 @@
 import { getDb } from '../../lib/db.js';
+import { getSessionUser } from '../../lib/auth.js';
 import { genId } from '../../lib/game.js';
 
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB (istemci yüklerken zaten küçültür)
 
 export default async function handler(req, res) {
   try {
+    const user = await getSessionUser(req);
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+
     const db = await getDb();
     const images = db.collection('images');
 
     if (req.method === 'GET') {
-      const list = await images.find({}).sort({ createdAt: -1 }).toArray();
+      const list = await images.find({ userId: user.id }).sort({ createdAt: -1 }).toArray();
       return res.status(200).json(list.map((i) => ({
         id: i.id, originalName: i.originalName, mime: i.mime, size: i.size, createdAt: i.createdAt,
       })));
@@ -27,6 +31,7 @@ export default async function handler(req, res) {
 
       const img = {
         id: genId(),
+        userId: user.id,
         originalName: String(originalName || 'görsel').slice(0, 200),
         mime,
         size: buf.length,

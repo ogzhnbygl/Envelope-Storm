@@ -4,6 +4,22 @@ let games = [];
 let images = [];
 let editingId = null;
 let envelopes = [];
+let currentUser = null;
+
+// Auth Check
+api('GET', '/api/auth/me').then(res => {
+  if (!res.user) window.location.href = '/login.html';
+  else {
+    currentUser = res.user;
+    document.getElementById('user-info').textContent = `Hoş geldin, ${currentUser.name}`;
+    loadGames();
+    loadImages();
+  }
+}).catch(() => window.location.href = '/login.html');
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  api('POST', '/api/auth/logout').then(() => window.location.href = '/login.html');
+});
 
 const gamesList = $('#games-list');
 const imagesGrid = $('#images-grid');
@@ -342,5 +358,5 @@ function switchTab(tab) {
 }
 
 // ---------- başlat ----------
-loadGames();
-loadImages();
+// loadGames(); and loadImages(); are now called after auth check
+
