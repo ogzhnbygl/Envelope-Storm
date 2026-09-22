@@ -269,6 +269,8 @@ function openEditor(game) {
   $('#team-b-name').value = game && game.teams[1] ? game.teams[1].name : 'Grup B';
   $('#envelope-count').value = game ? game.envelopeCount : 12;
   envelopes = game ? JSON.parse(JSON.stringify(game.envelopes)) : defaultEnvelopes(12);
+  $('#games-section').classList.add('hidden');
+  $('#images-section').classList.add('hidden');
   success.classList.add('hidden');
   editor.classList.remove('hidden');
   renderEnvelopes();
@@ -276,8 +278,7 @@ function openEditor(game) {
 }
 
 function closeEditor() {
-  editor.classList.add('hidden');
-  success.classList.add('hidden');
+  switchTab('games');
 }
 
 $('#new-game').addEventListener('click', () => openEditor(null));

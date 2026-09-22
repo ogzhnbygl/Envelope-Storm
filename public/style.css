@@ -211,7 +211,7 @@ button.env:active { transform: scale(.96); }
 }
 .img-tile:hover .del { display: block; }
 .upload-drop {
-  border: 2px dashed var(--line); border-radius: 14px; padding: 30px; text-align: center;
+  display: block; border: 2px dashed var(--line); border-radius: 14px; padding: 30px; text-align: center;
   color: var(--muted); cursor: pointer; margin-bottom: 14px;
 }
 .upload-drop:hover { border-color: var(--accent); }
