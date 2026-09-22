@@ -1,5 +1,5 @@
 import { getDb } from '../../lib/db.js';
-import { genId, uniqueCode, clampInt, normalizeTeams, summarizeGame } from '../../lib/game.js';
+import { genId, uniqueCode, clampInt, normalizeTeams, summarizeGame, sanitizeEnvelopes, resizeEnvelopes } from '../../lib/game.js';
 
 export default async function handler(req, res) {
   try {
@@ -12,17 +12,21 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const { name, teams, envelopeCount } = req.body || {};
+      const { name, teams, envelopeCount, envelopes } = req.body || {};
       const count = clampInt(envelopeCount, 12, 2, 24);
+      
+      let finalEnvelopes = sanitizeEnvelopes(envelopes);
+      if (finalEnvelopes.length !== count) {
+        finalEnvelopes = resizeEnvelopes(finalEnvelopes, count);
+      }
+
       const game = {
         id: genId(),
         code: await uniqueCode(games),
         name: String(name || 'Yeni Oyun').slice(0, 100),
         teams: normalizeTeams(teams),
         envelopeCount: count,
-        envelopes: Array.from({ length: count }, () => ({
-          id: genId(), type: 'image', imageId: null, points: 100,
-        })),
+        envelopes: finalEnvelopes,
         createdAt: new Date().toISOString(),
       };
       await games.insertOne(game);
