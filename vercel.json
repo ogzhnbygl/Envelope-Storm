@@ -2,6 +2,6 @@
   "rewrites": [
     { "source": "/board/:code", "destination": "/board.html" },
     { "source": "/moderate/:code", "destination": "/moderator.html" },
-    { "source": "/join", "destination": "/join.html" }
+    { "source": "/admin", "destination": "/admin.html" }
   ]
 }

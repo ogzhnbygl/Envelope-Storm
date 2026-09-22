@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envelope Storm — Yönetim Paneli</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>🌸 Envelope Storm — Yönetim 🐝</h1>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <a class="btn btn-sm" href="/">🎮 Oyuna Katıl</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="section-tabs">
+      <button class="btn active" id="tab-games">Oyunlar</button>
+      <button class="btn" id="tab-images">Görseller</button>
+    </div>
+
+    <!-- OYUNLAR -->
+    <section id="games-section">
+      <div class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2>Oyunlar</h2>
+          <button class="btn btn-primary" id="new-game">＋ Yeni Oyun</button>
+        </div>
+        <div id="games-list"></div>
+      </div>
+    </section>
+
+    <!-- GÖRSELLER -->
+    <section id="images-section" class="hidden">
+      <div class="panel">
+        <h2>Görsel Kütüphanesi</h2>
+        <label class="upload-drop" id="upload-drop">
+          📁 Görsel yüklemek için tıkla ya da sürükle
+          <input type="file" id="image-input" accept="image/*" multiple hidden>
+        </label>
+        <div class="images-grid" id="images-grid"></div>
+      </div>
+    </section>
+
+    <!-- OYUN DÜZENLEYİCİ -->
+    <section id="editor" class="hidden">
+      <div class="panel">
+        <h2 id="editor-title">Yeni Oyun</h2>
+        <div class="form-row">
+          <label>Oyun adı</label>
+          <input type="text" id="game-name-input" placeholder="Örn: Unit 3 — Animals">
+        </div>
+        <div class="two-col">
+          <div class="form-row">
+            <label>1. Grup adı</label>
+            <input type="text" id="team-a-name" value="Grup A">
+          </div>
+          <div class="form-row">
+            <label>2. Grup adı</label>
+            <input type="text" id="team-b-name" value="Grup B">
+          </div>
+        </div>
+        <div class="form-row" style="max-width:200px;">
+          <label>Zarf sayısı (2–24)</label>
+          <input type="number" id="envelope-count" min="2" max="24" value="12">
+        </div>
+
+        <h2 style="margin-top:8px;">Zarflar</h2>
+        <p class="hint">Her zarfın üzerinde puan yazar; içinde ya bir görsel ya da 🌪️ tornado olur.</p>
+        <div id="envelope-list"></div>
+
+        <div style="display:flex; gap:12px; margin-top:16px;">
+          <button class="btn btn-primary" id="save-game">💾 Kaydet</button>
+          <button class="btn btn-ghost" id="cancel-edit">Vazgeç</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BAŞARI / KOD -->
+    <section id="success" class="hidden">
+      <div class="panel" style="text-align:center;">
+        <h2>Oyun hazır! 🎉</h2>
+        <p class="hint">Oyuna katılma kodu:</p>
+        <div class="success-code-row" style="margin:10px 0;">
+          <span class="big-code" id="success-code">ABCD</span>
+        </div>
+        <button class="btn btn-sm" id="copy-code">📋 Kodu Kopyala</button>
+        <div class="success-links">
+          <a id="success-board" target="_blank" class="btn btn-board">🖥️ Akıllı Tahtayı Aç</a>
+          <a id="success-moderate" target="_blank" class="btn btn-moderate">📱 Moderatörü Aç</a>
+        </div>
+        <p class="hint">Tahta adresi: <b>/board/KOD</b> · Telefon adresi: <b>/moderate/KOD</b></p>
+        <button id="success-done" class="btn btn-ghost">Kapat</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

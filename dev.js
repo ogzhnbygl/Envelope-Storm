@@ -74,7 +74,7 @@ const server = http.createServer(async (req, res) => {
   let file = pathname === '/' ? '/index.html' : pathname;
   const dyn = file.match(/^\/(board|moderate)\/[^/]+$/);
   if (dyn) file = dyn[1] === 'board' ? '/board.html' : '/moderator.html';
-  else if (file === '/join') file = '/join.html';
+  else if (file === '/admin') file = '/admin.html';
 
   const full = path.join(PUBLIC, path.normalize(file).replace(/^([/\\])/, ''));
   if (!full.startsWith(PUBLIC)) { res.statusCode = 403; return res.end(); }
