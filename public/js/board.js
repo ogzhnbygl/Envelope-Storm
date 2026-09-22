@@ -95,19 +95,31 @@ function renderScoreboard() {
 }
 
 function renderGrid() {
+  const count = state.envelopes.length;
+  let cols = 4;
+  if (count <= 12) cols = 4;
+  else if (count <= 18) cols = 6;
+  else cols = 6;
+  
+  const rows = Math.ceil(count / cols);
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  grid.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
   grid.innerHTML = state.envelopes.map((e, i) => {
+    let inner = '';
     if (!e.revealed) {
-      return `<button class="env" data-i="${i}" aria-label="Zarf ${i + 1}, ${e.points} puan">
+      inner = `<button class="env" data-i="${i}" aria-label="Zarf ${i + 1}, ${e.points} puan">
         <div class="env-number">${i + 1}</div>
         <div class="env-flap"></div>
         <div class="env-points-num">+${e.points}</div>
         <div class="env-hint">PUAN</div>
       </button>`;
+    } else if (e.type === 'tornado') {
+      inner = `<div class="env revealed tornado-env"><div class="tornado-emoji">🌪️</div><div class="env-caption">TORNADO</div></div>`;
+    } else {
+      inner = `<div class="env revealed image-env">${e.imageId ? `<img src="/api/images/${e.imageId}" alt="görsel">` : '<div class="env-noimg">?</div>'}</div>`;
     }
-    if (e.type === 'tornado') {
-      return `<div class="env revealed tornado-env"><div class="tornado-emoji">🌪️</div><div class="env-caption">TORNADO</div></div>`;
-    }
-    return `<div class="env revealed image-env">${e.imageId ? `<img src="/api/images/${e.imageId}" alt="görsel">` : '<div class="env-noimg">?</div>'}</div>`;
+    return `<div class="envelope-wrapper">${inner}</div>`;
   }).join('');
 }
 
@@ -138,7 +150,14 @@ function showOverlay(icon, title, sub, tornado) {
   overlay.hidden = false;
   vibrate(tornado ? [200, 100, 200] : 120);
 }
-document.getElementById('overlay-close').addEventListener('click', () => { overlay.hidden = true; });
+document.getElementById('overlay-close').addEventListener('click', () => { 
+  overlay.hidden = true; 
+  if (state && state.finished) {
+    setTimeout(() => {
+      roomAction(code, { action: 'reset' }).catch(() => {});
+    }, 3000);
+  }
+});
 
 function showWinner() {
   const sorted = [...state.teams].sort((a, b) => b.score - a.score);

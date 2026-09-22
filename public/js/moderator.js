@@ -69,7 +69,14 @@ function showWinner() {
     : `Final skoru: ${sorted[0].score} — ${sorted[1].score}`;
   banner.hidden = false;
 }
-document.getElementById('banner-close').addEventListener('click', () => { banner.hidden = true; });
+document.getElementById('banner-close').addEventListener('click', () => { 
+  banner.hidden = true; 
+  if (state && state.finished) {
+    setTimeout(() => {
+      doAction({ action: 'reset' });
+    }, 3000);
+  }
+});
 
 async function doAction(payload) {
   try { onState((await roomAction(code, payload)).state); }
