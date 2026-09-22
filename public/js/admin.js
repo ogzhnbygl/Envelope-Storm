@@ -175,14 +175,13 @@ function renderEnvelopes() {
         <button type="button" class="type-btn ${isTornado ? 'active' : ''}" data-i="${i}" data-type="tornado">🌪️ Tornado</button>
       </div>
       <div class="env-picker ${isTornado ? 'hidden' : ''}" data-i="${i}">
-        ${images.map((img) => `
-          <label class="thumb ${env.imageId === img.id ? 'selected' : ''}" data-img="${img.id}" title="${escapeHtml(img.originalName)}">
-            <img src="/api/images/${img.id}" alt="">
-          </label>`).join('')}
-        <label class="thumb upload-tile" title="Yükle">
-          <input type="file" accept="image/*" multiple data-upload-for="${i}">
-          <span>＋</span>
-        </label>
+        ${env.imageId ? `
+          <div class="thumb env-pick-btn" data-i="${i}" style="border-color:var(--ok);" title="Değiştir">
+            <img src="/api/images/${env.imageId}" alt="">
+          </div>
+        ` : `
+          <button type="button" class="btn btn-sm btn-primary env-pick-btn" data-i="${i}">🖼️ Seç / Yükle</button>
+        `}
       </div>
       <div class="env-points">
         <label class="muted" style="display:block;font-size:12px;">Puan</label>
@@ -191,6 +190,8 @@ function renderEnvelopes() {
     envelopeList.appendChild(row);
   });
 }
+
+let pickingForEnvelope = null;
 
 envelopeList.addEventListener('click', (e) => {
   const typeBtn = e.target.closest('.type-btn');
@@ -201,12 +202,11 @@ envelopeList.addEventListener('click', (e) => {
     renderEnvelopes();
     return;
   }
-  const thumb = e.target.closest('.thumb[data-img]');
-  if (thumb) {
-    const i = +thumb.closest('.env-picker').dataset.i;
-    envelopes[i].imageId = thumb.dataset.img;
-    envelopes[i].type = 'image';
-    thumb.closest('.env-picker').querySelectorAll('.thumb').forEach((t) => t.classList.toggle('selected', t === thumb));
+  const pickBtn = e.target.closest('.env-pick-btn');
+  if (pickBtn) {
+    pickingForEnvelope = +pickBtn.dataset.i;
+    renderModalImages();
+    $('#image-modal').classList.remove('hidden');
   }
 });
 
@@ -216,15 +216,43 @@ envelopeList.addEventListener('input', (e) => {
   }
 });
 
-envelopeList.addEventListener('change', async (e) => {
-  const fileInput = e.target.closest('input[data-upload-for]');
-  if (fileInput && fileInput.files.length) {
-    const i = +fileInput.dataset.uploadFor;
-    const created = await uploadFiles(fileInput.files);
-    if (created.length) {
-      envelopes[i].type = 'image';
-      envelopes[i].imageId = created[0].id;
-      await loadImages();
+// Modal işlemleri
+$('#close-modal').addEventListener('click', () => $('#image-modal').classList.add('hidden'));
+
+function renderModalImages() {
+  const grid = $('#modal-images-grid');
+  if (images.length === 0) {
+    grid.innerHTML = '<p class="muted">Galeri boş. Yeni görsel yükleyin.</p>';
+    return;
+  }
+  grid.innerHTML = images.map((img) => `
+    <div class="img-tile" data-img="${img.id}" style="cursor:pointer;" title="${escapeHtml(img.originalName)}">
+      <img src="/api/images/${img.id}" alt="">
+    </div>`).join('');
+}
+
+$('#modal-images-grid').addEventListener('click', (e) => {
+  const tile = e.target.closest('.img-tile[data-img]');
+  if (tile && pickingForEnvelope !== null) {
+    envelopes[pickingForEnvelope].imageId = tile.dataset.img;
+    envelopes[pickingForEnvelope].type = 'image';
+    renderEnvelopes();
+    $('#image-modal').classList.add('hidden');
+  }
+});
+
+$('#modal-image-input').addEventListener('change', async (e) => {
+  if (e.target.files.length) {
+    const created = await uploadFiles(e.target.files);
+    e.target.value = '';
+    await loadImages();
+    if (pickingForEnvelope !== null && created.length) {
+      envelopes[pickingForEnvelope].imageId = created[0].id;
+      envelopes[pickingForEnvelope].type = 'image';
+      renderEnvelopes();
+      $('#image-modal').classList.add('hidden');
+    } else {
+      renderModalImages();
     }
   }
 });

@@ -95,6 +95,21 @@
         <button id="success-done" class="btn btn-ghost">Kapat</button>
       </div>
     </section>
+
+    <!-- GÖRSEL SEÇME MODALI -->
+    <div id="image-modal" class="overlay hidden">
+      <div class="overlay-card" style="width: 90vw; max-width: 500px; max-height: 85vh; overflow-y: auto; text-align: left; padding: 24px;">
+        <h2 style="margin-top:0;">Görsel Seç</h2>
+        <div class="images-grid" id="modal-images-grid" style="margin-bottom: 16px;"></div>
+        <label class="upload-drop" style="margin-bottom: 16px;">
+          📁 Yeni Görsel Yükle
+          <input type="file" id="modal-image-input" accept="image/*" multiple hidden>
+        </label>
+        <div style="text-align: right;">
+          <button class="btn btn-ghost" id="close-modal">Kapat</button>
+        </div>
+      </div>
+    </div>
   </main>
 
   <script src="/js/common.js"></script>
