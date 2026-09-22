@@ -26,7 +26,7 @@ async function loadGames() {
 async function loadImages() {
   images = await api('GET', '/api/images');
   renderImages();
-  if (!editor.hidden) renderEnvelopes();
+  if (!editor.classList.contains('hidden')) renderEnvelopes();
 }
 
 // ---------- oyun listesi ----------
@@ -238,15 +238,15 @@ function openEditor(game) {
   $('#team-b-name').value = game && game.teams[1] ? game.teams[1].name : 'Grup B';
   $('#envelope-count').value = game ? game.envelopeCount : 12;
   envelopes = game ? JSON.parse(JSON.stringify(game.envelopes)) : defaultEnvelopes(12);
-  success.hidden = true;
-  editor.hidden = false;
+  success.classList.add('hidden');
+  editor.classList.remove('hidden');
   renderEnvelopes();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function closeEditor() {
-  editor.hidden = true;
-  success.hidden = true;
+  editor.classList.add('hidden');
+  success.classList.add('hidden');
 }
 
 $('#new-game').addEventListener('click', () => openEditor(null));
@@ -274,13 +274,13 @@ $('#save-game').addEventListener('click', async () => {
   let game;
   if (editingId) game = await api('PUT', '/api/games/' + editingId, payload);
   else game = await api('POST', '/api/games', payload);
-  editor.hidden = true;
+  editor.classList.add('hidden');
   await loadGames();
   showSuccess(game);
 });
 
 function showSuccess(game) {
-  success.hidden = false;
+  success.classList.remove('hidden');
   $('#success-code').textContent = game.code;
   $('#success-board').href = `${location.origin}/board/${game.code}`;
   $('#success-moderate').href = `${location.origin}/moderate/${game.code}`;
@@ -301,8 +301,8 @@ function switchTab(tab) {
   $('#tab-images').classList.toggle('active', tab === 'images');
   $('#games-section').classList.toggle('hidden', tab !== 'games');
   $('#images-section').classList.toggle('hidden', tab !== 'images');
-  editor.hidden = true;
-  success.hidden = true;
+  editor.classList.add('hidden');
+  success.classList.add('hidden');
 }
 
 // ---------- başlat ----------
