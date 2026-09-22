@@ -6,11 +6,20 @@ const overlay = document.getElementById('overlay');
 let state = null;
 let lastSeq = null;
 
+let pendingTornadoTeam = null;
+let pendingTornadoScore = 0;
+
 function onState(s) {
   const prev = state;
   const isChanged = !prev || prev.actionSeq !== s.actionSeq;
   state = s;
-  if (lastSeq !== null && s.actionSeq > lastSeq && s.lastAction) handleAction(s.lastAction);
+  if (lastSeq !== null && s.actionSeq > lastSeq && s.lastAction) {
+    if (s.lastAction.type === 'tornado' && prev && prev.teams[s.lastAction.teamIndex]) {
+      pendingTornadoTeam = s.lastAction.teamIndex;
+      pendingTornadoScore = prev.teams[s.lastAction.teamIndex].score;
+    }
+    handleAction(s.lastAction);
+  }
   lastSeq = s.actionSeq;
   if (isChanged) render();
   if (s.finished && (!prev || !prev.finished)) showWinner();
@@ -18,14 +27,60 @@ function onState(s) {
 
 function handleAction(a) {
   if (a.type === 'tornado') {
-    const team = state && state.teams && state.teams[a.teamIndex];
-    showOverlay('🌪️', 'TORNADO!', `${team ? team.name : 'Grup'} — tüm puanlar silindi!`, true);
+    playTornadoAnimation(a.index, a.teamIndex);
   }
+}
+
+function playTornadoAnimation(envIndex, teamIndex) {
+  vibrate([100, 50, 100]);
+  const envEl = document.querySelector(`.env[data-i="${envIndex}"]`) || document.querySelectorAll('.env')[envIndex];
+  const teamEl = document.querySelectorAll('.team-card')[teamIndex];
+  if (!envEl || !teamEl) return;
+
+  const envRect = envEl.getBoundingClientRect();
+  const teamRect = teamEl.getBoundingClientRect();
+
+  const tornado = document.createElement('div');
+  tornado.className = 'floating-tornado';
+  tornado.textContent = '🌪️';
+  tornado.style.left = (envRect.left + envRect.width / 2) + 'px';
+  tornado.style.top = (envRect.top + envRect.height / 2) + 'px';
+  document.body.appendChild(tornado);
+
+  tornado.offsetHeight; // Force reflow
+  tornado.style.left = (teamRect.left + teamRect.width / 2) + 'px';
+  tornado.style.top = (teamRect.top + teamRect.height / 2) + 'px';
+
+  setTimeout(() => {
+    tornado.remove();
+    const scoreEl = document.getElementById(`score-${teamIndex}`);
+    if (scoreEl) {
+      scoreEl.classList.add('score-crash');
+      setTimeout(() => {
+        pendingTornadoTeam = null;
+        renderScoreboard();
+      }, 400); // Ortasında gerçek puana (0) geçiş yap
+    } else {
+      pendingTornadoTeam = null;
+      renderScoreboard();
+    }
+  }, 1500);
 }
 
 function render() {
   document.getElementById('game-name').textContent = state.name;
   document.getElementById('code').textContent = state.code;
+  
+  if (!state.started) {
+    document.getElementById('envelope-grid').style.display = 'none';
+    document.getElementById('waiting-screen').style.display = 'block';
+    scoreboardEl.style.opacity = '0.5';
+  } else {
+    document.getElementById('envelope-grid').style.display = '';
+    document.getElementById('waiting-screen').style.display = 'none';
+    scoreboardEl.style.opacity = '1';
+  }
+
   renderScoreboard();
   renderGrid();
 }
@@ -34,7 +89,7 @@ function renderScoreboard() {
   scoreboardEl.innerHTML = state.teams.map((t, i) => `
     <div class="team-card ${i === state.currentTeam ? 'active' : ''} ${i === 0 ? 'team-a' : 'team-b'}">
       <div class="team-name">${escapeHtml(t.name)}</div>
-      <div class="team-score">${t.score}</div>
+      <div class="team-score" id="score-${i}">${pendingTornadoTeam === i ? pendingTornadoScore : t.score}</div>
       ${i === state.currentTeam ? '<div class="turn-badge">SIRA</div>' : ''}
     </div>`).join('');
 }
@@ -43,6 +98,7 @@ function renderGrid() {
   grid.innerHTML = state.envelopes.map((e, i) => {
     if (!e.revealed) {
       return `<button class="env" data-i="${i}" aria-label="Zarf ${i + 1}, ${e.points} puan">
+        <div class="env-number">${i + 1}</div>
         <div class="env-flap"></div>
         <div class="env-points-num">+${e.points}</div>
         <div class="env-hint">PUAN</div>
@@ -58,6 +114,7 @@ function renderGrid() {
 grid.addEventListener('click', async (e) => {
   const btn = e.target.closest('.env[data-i]');
   if (!btn) return;
+  if (state && state.lastOpened != null) return; // Moderatör kararı bekleniyor
   try {
     onState((await roomAction(code, { action: 'open-envelope', index: +btn.dataset.i })).state);
   } catch (err) { /* sessizce */ }

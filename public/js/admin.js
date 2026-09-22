@@ -54,7 +54,11 @@ gamesList.addEventListener('click', (e) => {
   const copy = e.target.closest('[data-copy]');
   if (copy) { navigator.clipboard?.writeText(copy.dataset.copy); copy.textContent = 'Kopyalandı ✓'; setTimeout(() => copy.textContent = 'Kopyala', 1200); return; }
   const edit = e.target.closest('[data-edit]');
-  if (edit) { const g = games.find((x) => x.id === edit.dataset.edit); openEditor(g); return; }
+  if (edit) {
+    const id = edit.dataset.edit;
+    api('GET', '/api/games/' + id).then(fullGame => openEditor(fullGame)).catch(e => alert('Oyun yüklenemedi.'));
+    return;
+  }
   const del = e.target.closest('[data-del]');
   if (del) {
     const g = games.find((x) => x.id === del.dataset.del);

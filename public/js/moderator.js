@@ -93,3 +93,6 @@ function onNotFound() {
 }
 
 pollRoom(code, onState, onNotFound);
+
+// Moderatör bağlandığında oyunu başlat
+roomAction(code, { action: 'start' }).catch(() => {});
