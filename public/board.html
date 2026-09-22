@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envelope Storm — Tahta</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="board">
+  <header class="topbar">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <h1 id="game-name">…</h1>
+      <span class="code-chip">KOD: <b id="code">—</b></span>
+    </div>
+    <div class="scoreboard" id="scoreboard"></div>
+  </header>
+
+  <main class="board-main">
+    <div class="envelope-grid" id="envelope-grid"></div>
+  </main>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="overlay-card">
+      <div class="overlay-icon" id="overlay-icon">🌪️</div>
+      <h2 id="overlay-title">TORNADO!</h2>
+      <p id="overlay-sub"></p>
+      <button id="overlay-close" class="btn btn-primary">Devam</button>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/board.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envelope Storm — Katıl</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="wrap" style="max-width:480px; padding-top:8vh;">
+    <div class="panel" style="text-align:center;">
+      <div style="font-size:64px;">🌪️</div>
+      <h1 style="margin:8px 0;">Envelope Storm</h1>
+      <p class="muted">Öğretmeninden aldığın kodu gir, sonra rolünü seç.</p>
+      <div class="form-row" style="margin-top:20px;">
+        <input type="text" id="code-input" placeholder="KOD (ör. K4T7)" maxlength="6"
+               style="text-align:center; font-size:30px; letter-spacing:8px; text-transform:uppercase; width:100%; padding:14px; border-radius:12px; border:1px solid var(--line); background:var(--bg2); color:var(--text);">
+      </div>
+      <div id="join-error" style="color:var(--danger); min-height:22px; margin:6px 0;"></div>
+      <div class="judge-row" style="margin-top:8px;">
+        <button class="btn btn-board" id="board-btn" style="flex:1; padding:18px;">🖥️ Akıllı Tahta</button>
+        <button class="btn btn-moderate" id="moderate-btn" style="flex:1; padding:18px;">📱 Öğretmen (Moderatör)</button>
+      </div>
+      <p class="hint" style="margin-top:18px;"><a href="/">← Yönetim paneline dön</a></p>
+    </div>
+  </main>
+  <script src="/js/common.js"></script>
+  <script src="/js/join.js"></script>
+</body>
+</html>

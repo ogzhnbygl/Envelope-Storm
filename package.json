@@ -1,0 +1,20 @@
+{
+  "name": "envelope-storm",
+  "version": "2.0.0",
+  "description": "Classroom English envelope game for smartboards — Vercel + MongoDB Atlas (serverless)",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev.js",
+    "test": "node --test test/game.test.mjs",
+    "test:integration": "node --test test/integration.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^9.4.0"
+  }
+}

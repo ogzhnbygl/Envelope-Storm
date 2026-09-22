@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Envelope Storm — Moderatör</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 id="game-name">…</h1>
+    <span class="code-chip">KOD: <b id="code">—</b></span>
+  </header>
+
+  <main class="mod-wrap">
+    <div class="mod-scoreboard" id="scoreboard"></div>
+
+    <div class="open-hint" id="open-hint">Sıradaki öğrenci bir zarf seçsin…</div>
+
+    <div class="judge-row">
+      <button class="btn btn-ok" id="judge-correct">✓ Doğru</button>
+      <button class="btn btn-danger" id="judge-incorrect">✗ Yanlış</button>
+    </div>
+
+    <div class="ctrl-row">
+      <button class="btn" id="next-team">Sıradaki grup →</button>
+      <button class="btn" id="reset">🔄 Oyunu sıfırla</button>
+      <button class="btn btn-board" id="finish">🏁 Oyunu bitir</button>
+    </div>
+
+    <div class="log" id="log"></div>
+  </main>
+
+  <div class="overlay" id="banner" hidden>
+    <div class="overlay-card">
+      <div class="overlay-icon">🏆</div>
+      <h2 id="banner-title">Oyun bitti!</h2>
+      <p id="banner-text"></p>
+      <button id="banner-close" class="btn btn-primary">Kapat</button>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/moderator.js"></script>
+</body>
+</html>
