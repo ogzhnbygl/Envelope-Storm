@@ -116,9 +116,12 @@ button.env:active { transform: scale(.96); }
 .env.revealed { animation: pop .3s ease; }
 
 @keyframes spinTornado {
-  0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 0; }
-  20% { transform: translate(-50%, -50%) scale(2) rotate(720deg); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1.5) rotate(2160deg); opacity: 1; }
+  0% { transform: translate(-50%, -50%) scale(0.5) rotateY(0deg) rotateZ(-10deg); opacity: 0; }
+  20% { transform: translate(-50%, -50%) scale(2) rotateY(1080deg) rotateZ(10deg); opacity: 1; }
+  40% { transform: translate(-50%, -50%) scale(2.2) rotateY(2160deg) rotateZ(-5deg); opacity: 1; }
+  60% { transform: translate(-50%, -50%) scale(2.5) rotateY(3240deg) rotateZ(15deg); opacity: 1; }
+  80% { transform: translate(-50%, -50%) scale(2.2) rotateY(4320deg) rotateZ(-10deg); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.5) rotateY(5400deg) rotateZ(0deg); opacity: 1; }
 }
 
 .floating-tornado {

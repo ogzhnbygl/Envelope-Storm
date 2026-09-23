@@ -113,3 +113,9 @@ pollRoom(code, onState, onNotFound);
 document.getElementById('btn-start-game').addEventListener('click', () => {
   roomAction(code, { action: 'start' }).catch(() => {});
 });
+
+window.addEventListener('pagehide', () => {
+  if (state && state.started) {
+    navigator.sendBeacon(`/api/room/${code}`, JSON.stringify({ action: 'pause' }));
+  }
+});
