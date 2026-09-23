@@ -124,19 +124,35 @@ function loadImage(src) {
   });
 }
 async function fileToUploadDataUrl(file) {
-  const MAX_DIM = 1400, QUALITY = 0.85;
+  const TARGET_SIZE = 1200; // Akıllı tahtalarda bulanıklaşmaması için ideal çözünürlük
+  const QUALITY = 0.85; // %85 kalite
   const dataUrl = await readFileAsDataURL(file);
-  if (file.type === 'image/svg+xml') return dataUrl;
+  
+  if (file.type === 'image/svg+xml') return dataUrl; // SVG'leri doğrudan geçir
+  
   const img = await loadImage(dataUrl);
-  const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
-  if (scale === 1 && file.size <= 300 * 1024) return dataUrl; // zaten küçük
-  const w = Math.max(1, Math.round(img.width * scale));
-  const h = Math.max(1, Math.round(img.height * scale));
+  
+  // Görselin en kısa kenarını bul (1:1 kırpma için)
+  const minDim = Math.min(img.width, img.height);
+  
+  // Merkezden kırpmak için X ve Y ofsetleri
+  const cropX = (img.width - minDim) / 2;
+  const cropY = (img.height - minDim) / 2;
+  
+  // Çıktı boyutunu belirle (Görsel zaten 800'den küçükse kendi boyutunda kalsın)
+  const finalSize = Math.min(minDim, TARGET_SIZE);
+  
   const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
+  canvas.width = finalSize;
+  canvas.height = finalSize;
+  
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);
-  ctx.drawImage(img, 0, 0, w, h);
+  ctx.fillStyle = '#fff'; 
+  ctx.fillRect(0, 0, finalSize, finalSize);
+  
+  // img'nin kırpılan alanını alıp, canvas'ın tamamına (finalSize x finalSize) çiz
+  ctx.drawImage(img, cropX, cropY, minDim, minDim, 0, 0, finalSize, finalSize);
+  
   return canvas.toDataURL('image/jpeg', QUALITY);
 }
 

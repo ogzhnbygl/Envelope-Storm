@@ -114,8 +114,14 @@ document.getElementById('btn-start-game').addEventListener('click', () => {
   roomAction(code, { action: 'start' }).catch(() => {});
 });
 
-window.addEventListener('pagehide', () => {
+function pauseGame() {
   if (state && state.started) {
-    navigator.sendBeacon(`/api/room/${code}`, JSON.stringify({ action: 'pause' }));
+    const blob = new Blob([JSON.stringify({ action: 'pause' })], { type: 'application/json' });
+    navigator.sendBeacon(`/api/room/${code}`, blob);
   }
+}
+
+window.addEventListener('pagehide', pauseGame);
+window.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') pauseGame();
 });
