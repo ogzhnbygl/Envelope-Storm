@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       if (!buf) return res.status(500).end();
       res.status(200);
       res.setHeader('Content-Type', img.mime || 'image/jpeg');
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      res.setHeader('Cache-Control', 'public, max-age=3600');
       return res.end(buf);
     }
 
