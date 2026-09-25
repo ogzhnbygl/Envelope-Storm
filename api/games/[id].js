@@ -30,6 +30,22 @@ export default async function handler(req, res) {
       }
       g.updatedAt = new Date().toISOString();
       await games.replaceOne({ id }, g);
+      
+      const room = await db.collection('rooms').findOne({ _id: g.code });
+      if (room) {
+        room.name = g.name;
+        room.teams.forEach((t, i) => { if (g.teams[i]) t.name = g.teams[i].name; });
+        room.envelopes = g.envelopes.map((e, i) => {
+          const old = room.envelopes[i];
+          return {
+            id: e.id, type: e.type, imageId: e.imageId, points: Number(e.points) || 0,
+            revealed: old ? old.revealed : false,
+          };
+        });
+        room.actionSeq = (room.actionSeq || 0) + 1;
+        room.updatedAt = Date.now();
+        await db.collection('rooms').replaceOne({ _id: g.code }, room);
+      }
       return res.status(200).json(g);
     }
 
